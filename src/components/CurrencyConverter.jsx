@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react"
 import useInputState from "@/hooks/useInputState"
+import Modal from "@/components/Modal"
 
 const CurrencyConverter = () => {
     
-    console.log()
-    const [from, setFrom] = useInputState('')
-    const [to, setTo] = useInputState('')
-    const [amount, setAmount] = useInputState('')
+    const [from, setFrom] = useInputState("")
+    const [to, setTo] = useInputState("")
+    const [amount, setAmount] = useInputState("")
     const [isAmountValid, setIsAmountValid] = useState(false)
     const [result, setResult] = useState(0)
+    const [isError, setIsError] = useState(false)
 
     useEffect(() => {
-        if (amount !=='0' && /^\d+$/.test(amount)) {
+        if (amount !=="0" && /^\d+$/.test(amount)) {
             setIsAmountValid(true)
             return
         }
@@ -19,14 +20,22 @@ const CurrencyConverter = () => {
     }, [amount])
 
     const convertCurrency = async () => {
-        const staticData = await fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=${process.env.NEXT_PUBLIC_API_KEY}&symbols=${to}`,
-         {
-            referrerPolicy: 'unsafe-url',
-            method: 'GET'
-         })
-        let data = ""
-        if (staticData) data = await staticData.json()
-        setResult(data.rates[to] * amount)
+        try {
+            const staticData = await fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=${process.env.NEXT_PUBLIC_API_KEY}&symbols=${to}`,
+            {
+               referrerPolicy: "unsafe-url",
+               method: "GET"
+            })
+           let data = ""
+           if (staticData) data = await staticData.json()
+           setResult((data.rates[to] * amount).toFixed(2))
+        } catch {
+            setIsError(true)
+        }
+    }
+
+    const closeModal = () => {
+        setIsError(false)
     }
 
     return (
@@ -83,6 +92,7 @@ const CurrencyConverter = () => {
                     </div>
                 }
             </div>
+            { isError && <Modal closeModal={closeModal}/> }
         </div>
     )
 }

@@ -1,10 +1,10 @@
-import Navbar from '@/components/Navbar'
-import Landing from '@/components/Landing'
-import CurrencyConverter from '@/components/CurrencyConverter'
-import { Inter } from 'next/font/google'
-import Head from 'next/head'
+import Navbar from "@/components/Navbar"
+import Landing from "@/components/Landing"
+import CurrencyConverter from "@/components/CurrencyConverter"
+import { Inter } from "next/font/google"
+import Head from "next/head"
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
   return (
